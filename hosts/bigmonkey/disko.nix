@@ -3,7 +3,7 @@
     disk = {
       nix = {
         type = "disk";
-        device = "/dev/disk/by-id/nvme-KINGSTON_OM8SEP41024Q-A0_50026B7686814B14";
+        device = "/dev/disk/by-id/nvme-WD_BLACK_SN770_1TB_234252800502";
         content = {
           type = "gpt";
           partitions = {
@@ -24,12 +24,14 @@
                 type = "bcachefs";
                 filesystem = "root";
                 label = "root";
+                extraFormatArgs = ["--discard"];
               };
             };
           };
         };
       };
 
+      # NVME raid drives
       nvme-6749 = {
         type = "disk";
         device = "/dev/disk/by-id/nvme-CT2000P310SSD8_24514CF66749";
@@ -37,6 +39,7 @@
           type = "bcachefs";
           filesystem = "np1";
           label = "np1.6749";
+          extraFormatArgs = ["--discard"];
         };
       };
 
@@ -47,6 +50,7 @@
           type = "bcachefs";
           filesystem = "np1";
           label = "np1.7818";
+          extraFormatArgs = ["--discard"];
         };
       };
 
@@ -57,6 +61,7 @@
           type = "bcachefs";
           filesystem = "np1";
           label = "np1.7847";
+          extraFormatArgs = ["--discard"];
         };
       };
 
@@ -67,6 +72,30 @@
           type = "bcachefs";
           filesystem = "np1";
           label = "np1.7917";
+          extraFormatArgs = ["--discard"];
+        };
+      };
+
+      # HDD raid drives
+      hdd-3ALH = {
+        type = "disk";
+        device = "/dev/disk/by-id/ata-ST4000VN006-3CW104_ZW603ALH";
+        content = {
+          type = "bcachefs";
+          filesystem = "dp1";
+          label = "dp1.3ALH";
+          extraFormatArgs = ["--discard"];
+        };
+      };
+
+      hdd-40NG = {
+        type = "disk";
+        device = "/dev/disk/by-id/ata-ST4000VN006-3CW104_ZW6040NG";
+        content = {
+          type = "bcachefs";
+          filesystem = "dp1";
+          label = "dp1.40NG";
+          extraFormatArgs = ["--discard"];
         };
       };
     };
@@ -75,7 +104,6 @@
       root = {
         type = "bcachefs_filesystem";
         extraFormatArgs = [
-          "--discard"
           "--compression zstd:1"
         ];
         subvolumes = {
@@ -91,15 +119,27 @@
       np1 = {
         type = "bcachefs_filesystem";
         extraFormatArgs = [
-          "--discard"
           "--compression zstd:1"
           "--erasure_code"
-          "--data_replicas 3+1"
+          "--data_replicas 1"
           "--metadata_replicas 2"
         ];
         subvolumes = {
           root = {
-            mountpoint = "/nix/persist/np1";
+            mountpoint = "/nix/persist/npool";
+          };
+        };
+      };
+
+      dp1 = {
+        type = "bcachefs_filesystem";
+        extraFormatArgs = [
+          "--compression zstd:10"
+          "--replicas 2"
+        ];
+        subvolumes = {
+          root = {
+            mountpoint = "/nix/persist/dpool";
           };
         };
       };
