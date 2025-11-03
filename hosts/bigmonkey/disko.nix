@@ -107,6 +107,9 @@
           "--compression zstd:1"
         ];
         subvolumes = {
+          nix = {
+            mountpoint = "/nix";
+          };
           root = {
             mountpoint = "/nix/persist";
           };
