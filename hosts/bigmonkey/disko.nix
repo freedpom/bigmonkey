@@ -125,8 +125,8 @@
           "--compression=zstd"
           "--background_compression=ztsd"
           #"--erasure_code" Not stable yet according to manpage
-          "--data_replicas 1"
-          "--metadata_replicas 2"
+          "--data_replicas=1"
+          "--metadata_replicas=2"
         ];
         subvolumes = {
           root = {
@@ -140,7 +140,7 @@
         extraFormatArgs = [
           "--compression=zstd"
           "--background_compression=zstd"
-          "--replicas 2"
+          "--replicas=2"
         ];
         subvolumes = {
           root = {
