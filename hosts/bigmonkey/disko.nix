@@ -1,95 +1,51 @@
-{
-  disko.devices = let
-    getIdFromDevice = device: let
-      parts = builtins.split "/" device;
-      devName = builtins.elemAt parts (builtins.length parts - 1);
-      len = builtins.stringLength devName;
-    in
-      builtins.substring (len - 4) 4 devName;
+{lib, ...}: let
+  # Create a set of devices with the same config, allows for use of device name in overrides
+  mkDevs = devices: defaults: fsOverrides: lib.foldl' (acc: device: acc // {"disk-${filterId device}" = lib.recursiveUpdate (defaults device) (fsOverrides device);}) {} devices;
 
-    bcachefsCommon = {
-      filesystem,
-      extraFormatArgs ? [],
-      ...
-    }: {
+  # Filter last 4 characters of /dev/disk/by-id name
+  filterId = device: lib.strings.substring (lib.stringLength device - 4) 4 device;
+
+  fpDevs = [
+    "/dev/disk/by-id/nvme-CT2000P310SSD8_24514CF66749"
+    "/dev/disk/by-id/nvme-CT2000P310SSD8_24514CF67818"
+    "/dev/disk/by-id/nvme-CT2000P310SSD8_24514CF67847"
+    "/dev/disk/by-id/nvme-CT2000P310SSD8_24514CF67917"
+  ];
+
+  bpDevs = [
+    "/dev/disk/by-id/ata-ST4000VN006-3CW104_ZW603ALH"
+    "/dev/disk/by-id/ata-ST4000VN006-3CW104_ZW6040NG"
+  ];
+
+  # Defaults for bcachefs drives
+  bcacheDefaults = device: {
+    inherit device;
+    type = "disk";
+    content = {
       type = "bcachefs";
-      inherit filesystem extraFormatArgs;
+      extraFormatArgs = ["--discard"];
     };
+  };
 
-    fastpoolArgs = [
-      "--discard"
-      "--compression=zstd"
-      "--background_compression=zstd"
-      "--data_replicas=1"
-      "--metadata_replicas=2"
-    ];
-
-    bulkpoolArgs = [
-      "--discard"
-      "--compression=zstd"
-      "--background_compression=zstd"
-      "--replicas=2"
-    ];
-
-    mkDisk = {
-      device,
-      pool,
-      args,
-    }: let
-      id = getIdFromDevice device;
-    in {
-      type = "disk";
-      inherit device;
-      content =
-        (bcachefsCommon {
-          filesystem = pool;
-          extraFormatArgs = args;
-        })
-        // {
-          label = "${pool}_${id}";
-        };
+  # Filesystem-specific overrides for fastpool
+  fpOverrides = device: {
+    content = {
+      filesystem = "fastpool";
+      label = "fastpool.${filterId device}";
     };
+  };
 
-    fastpoolDevices = [
-      "/dev/disk/by-id/nvme-CT2000P310SSD8_24514CF66749"
-      "/dev/disk/by-id/nvme-CT2000P310SSD8_24514CF67818"
-      "/dev/disk/by-id/nvme-CT2000P310SSD8_24514CF67847"
-      "/dev/disk/by-id/nvme-CT2000P310SSD8_24514CF67917"
-    ];
-
-    bulkpoolDevices = [
-      "/dev/disk/by-id/ata-ST4000VN006-3CW104_ZW603ALH"
-      "/dev/disk/by-id/ata-ST4000VN006-3CW104_ZW6040NG"
-    ];
-
-    fastpoolDiskMap = builtins.listToAttrs (
-      map (dev: {
-        name = "nvme-${getIdFromDevice dev}";
-        value = mkDisk {
-          device = dev;
-          pool = "fastpool";
-          args = fastpoolArgs;
-        };
-      })
-      fastpoolDevices
-    );
-
-    bulkpoolDiskMap = builtins.listToAttrs (
-      map (dev: {
-        name = "hdd-${getIdFromDevice dev}";
-        value = mkDisk {
-          device = dev;
-          pool = "bulkpool";
-          args = bulkpoolArgs;
-        };
-      })
-      bulkpoolDevices
-    );
-  in {
+  # Filesystem-specific overrides for bulkpool
+  bpOverrides = device: {
+    content = {
+      filesystem = "bulkpool";
+      label = "bulkpool.${filterId device}";
+    };
+  };
+in {
+  disko.devices = {
     disk =
-      fastpoolDiskMap
-      // bulkpoolDiskMap
-      // {
+      {
         nix = {
           type = "disk";
           device = "/dev/disk/by-id/nvme-WD_BLACK_SN770_1TB_234252800502";
@@ -106,29 +62,34 @@
                   mountOptions = ["umask=0077"];
                 };
               };
+
               root = {
                 size = "100%";
                 content = {
                   type = "bcachefs";
                   filesystem = "rootfs";
-                  label = "root";
+                  label = "rootfs";
                   extraFormatArgs = ["--discard"];
                 };
               };
             };
           };
         };
-      };
+      }
+      // mkDevs fpDevs bcacheDefaults fpOverrides
+      // mkDevs bpDevs bcacheDefaults bpOverrides;
 
     bcachefs_filesystems = {
       rootfs = {
         type = "bcachefs_filesystem";
-        extraFormatArgs = ["--compression=zstd"];
+        extraFormatArgs = [
+          "--compression=zstd:1"
+        ];
         subvolumes = {
           nix = {
             mountpoint = "/nix";
           };
-          persist = {
+          root = {
             mountpoint = "/nix/persist";
           };
           home = {
@@ -136,17 +97,33 @@
           };
         };
       };
-
       fastpool = {
         type = "bcachefs_filesystem";
-        extraFormatArgs = fastpoolArgs;
-        subvolumes.root.mountpoint = "/nix/persist/fastpool";
+        extraFormatArgs = [
+          "--compression=zstd:1"
+          "--erasure_code"
+          "--data_replicas=1"
+          "--metadata_replicas=2"
+        ];
+        subvolumes = {
+          pool = {
+            mountpoint = "/nix/persist/fpool";
+          };
+        };
       };
 
       bulkpool = {
         type = "bcachefs_filesystem";
-        extraFormatArgs = bulkpoolArgs;
-        subvolumes.root.mountpoint = "/nix/persist/bulkpool";
+        extraFormatArgs = [
+          "--compression zstd:5"
+          "--background_compression=zstd:10"
+          "--replicas=2"
+        ];
+        subvolumes = {
+          pool = {
+            mountpoint = "/nix/persist/bpool";
+          };
+        };
       };
     };
 
