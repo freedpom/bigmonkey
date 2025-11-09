@@ -3,10 +3,16 @@
   lib,
   self,
   ...
-}: let
-  hostsNames = lib.attrNames (lib.filterAttrs (n: v: v == "directory" && (builtins.readDir ./${n}) ? "default.nix") (builtins.readDir ./.));
+}:
+let
+  hostsNames = lib.attrNames (
+    lib.filterAttrs (n: v: v == "directory" && (builtins.readDir ./${n}) ? "default.nix") (
+      builtins.readDir ./.
+    )
+  );
 
-  mkHost = hostname:
+  mkHost =
+    hostname:
     inputs.nixpkgs.lib.nixosSystem {
       specialArgs = {
         inherit
@@ -26,6 +32,7 @@
         inputs.disko.nixosModules.disko
       ];
     };
-in {
+in
+{
   flake.nixosConfigurations = lib.genAttrs hostsNames mkHost;
 }

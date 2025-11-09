@@ -35,7 +35,20 @@
     };
   };
 
-  boot.initrd.includeDefaultModules = lib.mkForce true;
+  boot = {
+    initrd.includeDefaultModules = lib.mkForce true;
+    #   initrd.systemd.enable = true;
+    #   loader = {
+    #     timeout = 3;
+    #     systemd-boot.enable = true;
+    #   };
+    #   kernelParams = [
+    #   "systemd.log_level=debug"
+    #   "systemd.log_target=console"
+    #   "rd.debug"
+    #   "bcachefs.debug"
+    #   ];
+  };
 
   services.openssh = {
     enable = true;

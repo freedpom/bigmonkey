@@ -3,7 +3,7 @@
     disk = {
       nix = {
         type = "disk";
-        device = "/dev/disk/by-id/nvme-WD_BLACK_SN770_1TB_234252800502";
+        device = "/dev/disk/by-id/ata-QEMU_HARDDISK_QM00003";
         content = {
           type = "gpt";
           partitions = {
@@ -39,6 +39,28 @@
         extraFormatArgs = [
           "--compression=zstd:1"
         ];
+        # subvolumes = {
+        #   root = {
+        #     mountpoint = "/";
+        #   };
+        #   home = {
+        #     mountpoint = "/home";
+        #   };
+        #   nix = {
+        #     mountpoint = "/nix";
+        #   };
+        # };
+        # subvolumes = {
+        #   nix = {
+        #     mountpoint = "/nix";
+        #   };
+        #   root = {
+        #     mountpoint = "/nix/persist";
+        #   };
+        #   home = {
+        #     mountpoint = "/nix/persist/home";
+        #   };
+        # };
       };
     };
 
