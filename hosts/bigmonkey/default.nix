@@ -1,3 +1,4 @@
+{lib, ...}:
 {
   ff = {
     services = {
@@ -38,6 +39,7 @@
 
   systemd.enableEmergencyMode = true;
 
+  boot.plymouth.enable = lib.mkForce false;
   services.openssh = {
     enable = true;
     openFirewall = true;

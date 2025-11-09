@@ -22,36 +22,54 @@
               root = {
                 size = "100%";
                 content = {
-                  type = "bcachefs";
-                  filesystem = "rootfs";
-                  label = "rootfs";
-                  extraFormatArgs = ["--discard"];
+                type = "filesystem";
+                format = "ext4";
+                mountpoint = "/nix";
                 };
               };
+
+              # root = {
+              #   size = "100%";
+              #   content = {
+              #     type = "bcachefs";
+              #     filesystem = "rootfs";
+              #     label = "rootfs";
+              #     extraFormatArgs = ["--discard"];
+              #   };
+              # };
             };
           };
         };
       };
 
-    bcachefs_filesystems = {
-      rootfs = {
-        type = "bcachefs_filesystem";
-        mountpoint = "/";
-        # extraFormatArgs = [
-        #   "--compression=zstd:1"
-        # ];
-        # subvolumes = {
-        #   nix = {
-        #     mountpoint = "/nix";
-        #   };
-        #   root = {
-        #     mountpoint = "/nix/persist";
-        #   };
-        #   home = {
-        #     mountpoint = "/nix/persist/home";
-        #   };
-        # };
-      };
+    # bcachefs_filesystems = {
+    #   rootfs = {
+    #     type = "bcachefs_filesystem";
+    #     mountpoint = "/nix";
+    #     extraFormatArgs = [
+    #       "--compression=zstd:1"
+    #     ];
+    #     # subvolumes = {
+    #     #   nix = {
+    #     #     mountpoint = "/nix";
+    #     #   };
+    #     #   root = {
+    #     #     mountpoint = "/nix/persist";
+    #     #   };
+    #     #   home = {
+    #     #     mountpoint = "/nix/persist/home";
+    #     #   };
+    #     # };
+    #   };
+    # };
+
+    nodev."/" = {
+      fsType = "tmpfs";
+      mountOptions = [
+        "defaults"
+        "size=6G"
+        "mode=755"
+      ];
     };
   };
 }
