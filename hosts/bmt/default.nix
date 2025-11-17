@@ -1,6 +1,7 @@
 { lib, ... }:
 {
   ff = {
+    common.enable = true;
     services = {
       ananicy.enable = true;
       # ntp.enable = true;

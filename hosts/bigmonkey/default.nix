@@ -1,6 +1,7 @@
 { lib, ... }:
 {
   ff = {
+    common.enable = true;
     services = {
       ananicy.enable = true;
       # ntp.enable = true;
@@ -36,6 +37,9 @@
   };
 
   boot.initrd.includeDefaultModules = lib.mkForce true;
+  hardware.enableAllFirmware = true;
+  hardware.enableAllHardware = true;
+  nixpkgs.config.allowUnfree = lib.mkForce true;
 
   services.openssh = {
     enable = true;
