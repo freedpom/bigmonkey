@@ -1,6 +1,12 @@
-{lib, ...}: let
+{ lib, ... }:
+let
   # Create a set of devices with the same config, allows for use of device name in overrides
-  mkDevs = devices: defaults: fsOverrides: lib.foldl' (acc: device: acc // {"disk-${filterId device}" = lib.recursiveUpdate (defaults device) (fsOverrides device);}) {} devices;
+  mkDevs =
+    devices: defaults: fsOverrides:
+    lib.foldl' (
+      acc: device:
+      acc // { "disk-${filterId device}" = lib.recursiveUpdate (defaults device) (fsOverrides device); }
+    ) { } devices;
 
   # Filter last 4 characters of /dev/disk/by-id name
   filterId = device: lib.strings.substring (lib.stringLength device - 4) 4 device;
@@ -23,7 +29,7 @@
     type = "disk";
     content = {
       type = "bcachefs";
-      extraFormatArgs = ["--discard"];
+      extraFormatArgs = [ "--discard" ];
     };
   };
 
@@ -42,62 +48,54 @@
       label = "bulkpool.${filterId device}";
     };
   };
-in {
+in
+{
   disko.devices = {
-    disk =
-      {
-        nix = {
-          type = "disk";
-          device = "/dev/disk/by-id/nvme-WD_BLACK_SN770_1TB_234252800502";
-          content = {
-            type = "gpt";
-            partitions = {
-              boot = {
-                size = "1G";
-                type = "EF00";
-                content = {
-                  type = "filesystem";
-                  format = "vfat";
-                  mountpoint = "/boot";
-                  mountOptions = ["umask=0077"];
-                };
+    disk = {
+      nix = {
+        type = "disk";
+        device = "/dev/disk/by-id/nvme-WD_BLACK_SN770_1TB_234252800502";
+        content = {
+          type = "gpt";
+          partitions = {
+            boot = {
+              size = "1G";
+              type = "EF00";
+              content = {
+                type = "filesystem";
+                format = "vfat";
+                mountpoint = "/boot";
+                mountOptions = [ "umask=0077" ];
               };
+            };
 
-              root = {
-                size = "100%";
-                content = {
-                  type = "bcachefs";
-                  filesystem = "rootfs";
-                  label = "rootfs";
-                  extraFormatArgs = ["--discard"];
-                };
+            root = {
+              size = "100%";
+              content = {
+                type = "bcachefs";
+                filesystem = "rootfs";
+                label = "rootfs";
+                extraFormatArgs = [ "--discard" ];
               };
             };
           };
         };
-      }
-      // mkDevs fpDevs bcacheDefaults fpOverrides
-      // mkDevs bpDevs bcacheDefaults bpOverrides;
+      };
+    }
+    // mkDevs fpDevs bcacheDefaults fpOverrides
+    // mkDevs bpDevs bcacheDefaults bpOverrides;
 
     bcachefs_filesystems = {
       rootfs = {
+        mountpoint = "/nix";
         type = "bcachefs_filesystem";
         extraFormatArgs = [
           "--compression=zstd:1"
         ];
-        subvolumes = {
-          nix = {
-            mountpoint = "/nix";
-          };
-          root = {
-            mountpoint = "/nix/persist";
-          };
-          home = {
-            mountpoint = "/nix/persist/home";
-          };
-        };
       };
+
       fastpool = {
+        mountpoint = "/nix/persist/fpool";
         type = "bcachefs_filesystem";
         extraFormatArgs = [
           "--compression=zstd:1"
@@ -105,25 +103,16 @@ in {
           "--data_replicas=1"
           "--metadata_replicas=2"
         ];
-        subvolumes = {
-          pool = {
-            mountpoint = "/nix/persist/fpool";
-          };
-        };
       };
 
       bulkpool = {
+        mountpoint = "/nix/persist/bpool";
         type = "bcachefs_filesystem";
         extraFormatArgs = [
           "--compression zstd:5"
           "--background_compression=zstd:10"
           "--replicas=2"
         ];
-        subvolumes = {
-          pool = {
-            mountpoint = "/nix/persist/bpool";
-          };
-        };
       };
     };
 
