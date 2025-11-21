@@ -35,20 +35,20 @@
     bcachefs_filesystems = {
       rootfs = {
         type = "bcachefs_filesystem";
-        mountpoint = "/nix";
+        mountpoint = "/";
         extraFormatArgs = [
           "--compression=zstd:1"
         ];
       };
     };
 
-    nodev."/" = {
-      fsType = "tmpfs";
-      mountOptions = [
-        "defaults"
-        "size=6G"
-        "mode=755"
-      ];
-    };
+    # nodev."/" = {
+    #   fsType = "tmpfs";
+    #   mountOptions = [
+    #     "defaults"
+    #     "size=6G"
+    #     "mode=755"
+    #   ];
+    # };
   };
 }
