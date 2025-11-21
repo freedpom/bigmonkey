@@ -1,15 +1,14 @@
 { pkgs, ... }:
 {
   boot = {
-    kernelPackages = pkgs.linuxPackages_cachyos-server;
+    kernelPackages = pkgs.linuxPackages_latest;
     initrd.availableKernelModules = [
-      "mpt3sas"
-      "xhci_pci"
       "ahci"
-      "nvme"
-      "usb_storage"
-      "usbhid"
-      "sd_mod"
+      "xhci_pci"
+      "virtio_pci"
+      "virtio_scsi"
+      "sr_mod"
+      "virtio_blk"
     ];
     kernelModules = [ "kvm-amd" ];
     supportedFilesystems = [ "bcachefs" ];

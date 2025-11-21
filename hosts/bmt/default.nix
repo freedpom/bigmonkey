@@ -1,14 +1,25 @@
-{lib, ...}:
+{ lib, ... }:
 {
   ff = {
     common.enable = true;
+    services = {
+      ananicy.enable = true;
+      # ntp.enable = true;
+      # consoles = {
+      #   enable = true;
+      #   kmscon = ["tty1" "tty2"];
+      #   getty = ["tty3" "tty4"];
+      # };
+    };
+
     system = {
       nix.enable = true;
+      # performance.enable = true;
       systemd-boot.enable = true;
-      # preservation = {
-      #   enable = true;
-      #   preserveHome = true;
-      # };
+      preservation = {
+        enable = true;
+        preserveHome = true;
+      };
     };
 
     userConfig = {
@@ -25,10 +36,20 @@
     };
   };
 
-  boot.initrd.includeDefaultModules = lib.mkForce true;
-  hardware.enableAllFirmware = lib.mkForce true;
-  hardware.enableAllHardware = lib.mkForce true;
-  nixpkgs.config.allowUnfree = lib.mkForce true;
+  boot = {
+    initrd.includeDefaultModules = lib.mkForce true;
+    #   initrd.systemd.enable = true;
+    #   loader = {
+    #     timeout = 3;
+    #     systemd-boot.enable = true;
+    #   };
+    #   kernelParams = [
+    #   "systemd.log_level=debug"
+    #   "systemd.log_target=console"
+    #   "rd.debug"
+    #   "bcachefs.debug"
+    #   ];
+  };
 
   services.openssh = {
     enable = true;

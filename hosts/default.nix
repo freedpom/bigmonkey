@@ -3,10 +3,16 @@
   lib,
   self,
   ...
-}: let
-  hostsNames = lib.attrNames (lib.filterAttrs (n: v: v == "directory" && (builtins.readDir ./${n}) ? "default.nix") (builtins.readDir ./.));
+}:
+let
+  hostsNames = lib.attrNames (
+    lib.filterAttrs (n: v: v == "directory" && (builtins.readDir ./${n}) ? "default.nix") (
+      builtins.readDir ./.
+    )
+  );
 
-  mkHost = hostname:
+  mkHost =
+    hostname:
     inputs.nixpkgs.lib.nixosSystem {
       specialArgs = {
         inherit
@@ -21,11 +27,14 @@
         # inputs.agenix.nixosModules.default
         inputs.chaotic.nixosModules.default
         inputs.ff.nixosModules.freedpomFlake
+        inputs.ff.nixosModules.home-manager
+        inputs.ff.nixosModules.preservation
         inputs.home-manager.nixosModules.home-manager
         inputs.preservation.nixosModules.preservation
         inputs.disko.nixosModules.disko
       ];
     };
-in {
+in
+{
   flake.nixosConfigurations = lib.genAttrs hostsNames mkHost;
 }

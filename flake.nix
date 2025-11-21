@@ -15,15 +15,16 @@
     ];
   };
 
-  outputs = inputs @ {flake-parts, ...}:
-    flake-parts.lib.mkFlake {inherit inputs;} {
+  outputs =
+    inputs@{ flake-parts, ... }:
+    flake-parts.lib.mkFlake { inherit inputs; } {
       systems = [
         "x86_64-linux"
         "aarch64-linux"
       ];
 
       imports = [
-        inputs.fpFmt.flakeModule
+        inputs.ff.fmtModule
         inputs.home-manager.flakeModules.home-manager
         inputs.agenix-rekey.flakeModule
         ./modules
@@ -36,12 +37,7 @@
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
 
     disko = {
-      url = "github:nix-community/disko/latest";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    fpFmt = {
-      url = "github:freedpom/FreedpomFormatter";
+      url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
