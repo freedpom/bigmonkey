@@ -37,7 +37,7 @@
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
 
     disko = {
-      url = "github:nix-community/disko/latest";
+      url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

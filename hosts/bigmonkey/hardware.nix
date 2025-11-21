@@ -1,7 +1,7 @@
 { pkgs, ... }:
 {
   boot = {
-    kernelPackages = pkgs.linuxPackages_latest;
+    kernelPackages = pkgs.linuxPackages_cachyos-server;
     initrd.availableKernelModules = [
       "mpt3sas"
       "xhci_pci"

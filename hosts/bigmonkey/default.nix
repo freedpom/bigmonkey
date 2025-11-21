@@ -1,25 +1,14 @@
-{ lib, ... }:
+{lib, ...}:
 {
   ff = {
     common.enable = true;
-    services = {
-      ananicy.enable = true;
-      # ntp.enable = true;
-      # consoles = {
-      #   enable = true;
-      #   kmscon = ["tty1" "tty2"];
-      #   getty = ["tty3" "tty4"];
-      # };
-    };
-
     system = {
       nix.enable = true;
-      # performance.enable = true;
       systemd-boot.enable = true;
-      preservation = {
-        enable = true;
-        preserveHome = true;
-      };
+      # preservation = {
+      #   enable = true;
+      #   preserveHome = true;
+      # };
     };
 
     userConfig = {
@@ -37,8 +26,8 @@
   };
 
   boot.initrd.includeDefaultModules = lib.mkForce true;
-  hardware.enableAllFirmware = true;
-  hardware.enableAllHardware = true;
+  hardware.enableAllFirmware = lib.mkForce true;
+  hardware.enableAllHardware = lib.mkForce true;
   nixpkgs.config.allowUnfree = lib.mkForce true;
 
   services.openssh = {
