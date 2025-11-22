@@ -4,7 +4,7 @@
     common.enable = true;
     system = {
       nix.enable = true;
-      systemd-boot.enable = true;
+      # systemd-boot.enable = true;
       # preservation = {
       #   enable = true;
       #   preserveHome = true;
@@ -25,7 +25,13 @@
     };
   };
 
-  boot.initrd.includeDefaultModules = lib.mkForce true;
+  boot = { 
+    initrd = {
+      includeDefaultModules = lib.mkForce true;
+      systemd.emergencyAccess = true;
+    };
+    loader.systemd-boot.enable = true;
+  };
   hardware.enableAllFirmware = lib.mkForce true;
   hardware.enableAllHardware = lib.mkForce true;
   nixpkgs.config.allowUnfree = lib.mkForce true;
