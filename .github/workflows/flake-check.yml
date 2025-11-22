@@ -25,5 +25,7 @@ jobs:
         with:
           fail-mode: true
           send-statistics: false
+      - name: Run `nix fmt`
+        run: nix fmt .
       - name: Run `nix flake check`
         run: nix flake check .
