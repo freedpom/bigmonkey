@@ -1,7 +1,6 @@
 { lib, ... }:
 {
   ff = {
-    common.enable = true;
     system = {
       nix.enable = true;
       # systemd-boot.enable = true;
