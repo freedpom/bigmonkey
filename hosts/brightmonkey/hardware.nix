@@ -1,15 +1,26 @@
 { pkgs, ... }:
 {
+
   boot = {
     kernelPackages = pkgs.linuxPackages_latest;
     initrd.availableKernelModules = [
-      "mpt3sas"
       "xhci_pci"
       "ahci"
-      "nvme"
-      "usb_storage"
-      "usbhid"
       "sd_mod"
+      "sr_mod"
+      "virtio_net"
+      "virtio_pci"
+      "virtio_mmio"
+      "virtio_blk"
+      "virtio_scsi"
+      "9p"
+      "9pnet_virtio"
+    ];
+    initrd.kernelModules = [
+      "virtio_balloon"
+      "virtio_console"
+      "virtio_rng"
+      "virtio_gpu"
     ];
     kernelModules = [ "kvm-amd" ];
     supportedFilesystems = [ "bcachefs" ];
