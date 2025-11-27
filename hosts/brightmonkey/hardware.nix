@@ -31,6 +31,22 @@
     cpu.intel.updateMicrocode = true;
   };
 
+  systemd.network.networks."30-wan" = {
+    matchConfig.Name = "eth0";
+    networkConfig.DHCP = "no";
+    address = [
+      "5.161.179.69/32"
+      "2a01:4ff:f0:3776::/64"
+    ];
+    routes = [
+      {
+        Gateway = "172.31.1.1";
+        GatewayOnLink = true;
+      }
+      { Gateway = "fe80::1"; }
+    ];
+  };
+
   nixpkgs.hostPlatform = "x86_64-linux";
   system.stateVersion = "25.05";
 }
