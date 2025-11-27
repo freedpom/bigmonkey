@@ -1,11 +1,23 @@
 { lib, ... }:
 let
   # Create a set of devices with the same config, allows for use of device name in overrides
-  mkDevs =
-    devices: defaults: fsOverrides:
+  mkPool =
+    filesystem: devices:
     lib.foldl' (
       acc: device:
-      acc // { "disk-${filterId device}" = lib.recursiveUpdate (defaults device) (fsOverrides device); }
+      acc
+      // {
+        "disk-${filterId device}" = {
+          inherit device;
+          type = "disk";
+          content = {
+            inherit filesystem;
+            type = "bcachefs";
+            label = "${filesystem}.${filterId device}";
+            extraFormatArgs = [ "--discard" ];
+          };
+        };
+      }
     ) { } devices;
 
   # Filter last 4 characters of /dev/disk/by-id name
@@ -23,31 +35,6 @@ let
     "/dev/disk/by-id/ata-ST4000VN006-3CW104_ZW6040NG"
   ];
 
-  # Defaults for bcachefs drives
-  bcacheDefaults = device: {
-    inherit device;
-    type = "disk";
-    content = {
-      type = "bcachefs";
-      extraFormatArgs = [ "--discard" ];
-    };
-  };
-
-  # Filesystem-specific overrides for fastpool
-  fpOverrides = device: {
-    content = {
-      filesystem = "fastpool";
-      label = "fastpool.${filterId device}";
-    };
-  };
-
-  # Filesystem-specific overrides for bulkpool
-  bpOverrides = device: {
-    content = {
-      filesystem = "bulkpool";
-      label = "bulkpool.${filterId device}";
-    };
-  };
 in
 {
   disko.devices = {
@@ -82,8 +69,8 @@ in
         };
       };
     }
-    // mkDevs fpDevs bcacheDefaults fpOverrides
-    // mkDevs bpDevs bcacheDefaults bpOverrides;
+    // mkPool "fastpool" fpDevs
+    // mkPool "bulkpool" bpDevs;
 
     bcachefs_filesystems = {
       rootfs = {
