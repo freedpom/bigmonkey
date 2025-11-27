@@ -21,14 +21,14 @@
       "virtio_console"
       "virtio_rng"
       "virtio_gpu"
+      "dm-snapshot"
     ];
-    kernelModules = [ "kvm-amd" ];
-    supportedFilesystems = [ "bcachefs" ];
+    kernelModules = [ "kvm-intel" ];
   };
 
   hardware = {
     enableRedistributableFirmware = true;
-    cpu.amd.updateMicrocode = true;
+    cpu.intel.updateMicrocode = true;
   };
 
   nixpkgs.hostPlatform = "x86_64-linux";

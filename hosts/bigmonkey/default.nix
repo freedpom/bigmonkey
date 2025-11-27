@@ -4,7 +4,7 @@
     common.enable = true;
     system = {
       nix.enable = true;
-      systemd-boot.enable = true;
+      boot.enable = true;
       preservation = {
         enable = true;
         preserveHome = true;
