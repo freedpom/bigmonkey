@@ -38,7 +38,7 @@
   };
 
   imports = [
-    ./disko.nix
+    ./diskobcache.nix
     ./hardware.nix
   ];
 }
