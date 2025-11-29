@@ -37,8 +37,20 @@
         mountpoint = "/nix";
         type = "bcachefs_filesystem";
         extraFormatArgs = [
-          "--background-compression=zstd:6"
+          "--compression=zstd:3"
+          "--background_compression=zstd:6"
         ];
+        subvolumes = {
+          persist = {
+            mountpoint = "/nix/persist";
+          };
+          home = {
+            mountpoint = "/nix/persist/home";
+          };
+          os = {
+            mountpoint = "/nix/os";
+          };
+        };
       };
     };
 
