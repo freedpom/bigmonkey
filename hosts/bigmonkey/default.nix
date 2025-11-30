@@ -11,6 +11,11 @@
       };
     };
 
+    services.minecraft-server = {
+      enable = true;
+      dataDir = "/nix/persist/fpool/minecraft";
+    };
+
     userConfig = {
       users = {
         codman = {
@@ -40,6 +45,8 @@
     address = "10.1.1.1";
     interface = "eno1";
   };
+
+  nixpkgs.config.allowUnfree = true;
 
   imports = [
     ./disko.nix

@@ -9,10 +9,11 @@ let
   cfg = config.ff.services.minecraft-server;
 in
 {
+  imports = [ inputs.nix-minecraft.nixosModules.minecraft-servers ];
   options.ff.services.minecraft-server = {
     enable = lib.mkEnableOption "MIENCRAFT SERVER!!!";
     dataDir = lib.mkOption {
-      type = lib.types.path;
+      type = lib.types.str;
       default = "/var/lib/minecraft";
       description = ''
         Where minecraft go
@@ -35,10 +36,9 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    imports = [ inputs.nix-minecraft.nixosModules.minecraft-servers ];
     nixpkgs.overlays = [ inputs.nix-minecraft.overlay ];
     services.minecraft-server = {
-      dataDir = "";
+      inherit (cfg) dataDir;
       declarative = true;
       enable = true;
       eula = true;
@@ -51,14 +51,13 @@ in
         gamemode = 1;
         max-players = 5;
         motd = "NixOS Minecraft server!";
-        white-list = true;
-        enable-rcon = true;
-        "rcon.password" = "hunter2";
+        # white-list = true;
+        enable-rcon = false;
       };
-      whitelist = {
-        username1 = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx";
-        username2 = "yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy";
-      };
+      # whitelist = {
+      #   username1 = "Yung-Gimp";
+      #   username2 = "neochaotics";
+      # };
     };
   };
 }
