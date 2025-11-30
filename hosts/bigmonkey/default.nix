@@ -26,8 +26,19 @@
   };
 
   services.openssh = {
+    listenAddresses = [
+      {
+        addr = "10.1.1.2";
+        port = 22;
+      }
+    ];
     enable = true;
     openFirewall = true;
+  };
+
+  networking.defaultGateway = {
+    address = "10.1.1.1";
+    interface = "eno1";
   };
 
   imports = [
