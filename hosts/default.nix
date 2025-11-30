@@ -32,6 +32,7 @@ let
         inputs.home-manager.nixosModules.home-manager
         inputs.preservation.nixosModules.preservation
         inputs.disko.nixosModules.disko
+        self.nixosModules.bigmonkey
       ];
     };
 in

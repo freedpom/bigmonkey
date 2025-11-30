@@ -1,1 +1,5 @@
-{ }
+{
+  flake.nixosModules = {
+    bigmonkey = ./nixos;
+  };
+}
