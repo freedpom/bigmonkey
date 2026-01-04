@@ -30,15 +30,15 @@
   services.openssh = {
     enable = true;
     openFirewall = true;
-    settings = {
-      PermitRootLogin = "no";
-      PasswordAuthentication = false;
-      KbdInteractiveAuthentication = false;
-    };
+    #settings = {
+    #  PermitRootLogin = "no";
+    #  PasswordAuthentication = false;
+    #  KbdInteractiveAuthentication = false;
+    #};
   };
 
   imports = [
-    ./diskobcache.nix
+    ./disko.nix
     ./hardware.nix
   ];
 }

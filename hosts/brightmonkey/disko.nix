@@ -21,40 +21,40 @@
             root = {
               size = "100%";
               content = {
-                type = "btrfs";
-                extraArgs = [ "-f" ];
-                subvolumes = {
-                  "/nix" = {
-                    mountpoint = "/nix";
-                    mountOptions = [
-                      "compress=zstd"
-                      "noatime"
-                    ];
-                  };
-                  "/nix/persist" = {
-                    mountpoint = "/nix/persist";
-                    mountOptions = [
-                      "compress=zstd"
-                      "noatime"
-                    ];
-                  };
-                  "/nix/home" = {
-                    mountpoint = "/nix/home";
-                    mountOptions = [
-                      "compress=zstd"
-                      "noatime"
-                    ];
-                  };
-                  "/nix/os" = {
-                    mountpoint = "/nix/os";
-                    mountOptions = [
-                      "compress=zstd"
-                      "noatime"
-                    ];
-                  };
-                };
+                type = "bcachefs";
+                filesystem = "rootfs";
+                label = "rootfs";
+                extraFormatArgs = [ "--discard" ];
               };
             };
+          };
+        };
+      };
+    };
+
+    bcachefs_filesystems = {
+      rootfs = {
+        mountpoint = "/nix";
+        type = "bcachefs_filesystem";
+        passwordFile = "/tmp/secret.key";
+        extraFormatArgs = [
+          "--compression=zstd:2"
+          "--background_compression=zstd:4"
+        ];
+        subvolumes = {
+          "subvolumes/nix" = {
+            mountpoint = "/nix";
+          };
+          "subvolumes/nix/os" = {
+            mountOptions = [
+              "umask=0077"
+              "uid=0"
+              "gid=0"
+            ];
+          };
+          "subvolumes/nix/persist" = {
+          };
+          "subvolumes/nix/persist/home" = {
           };
         };
       };
