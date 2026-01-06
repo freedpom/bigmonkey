@@ -25,7 +25,6 @@ let
         ./${hostname}
         # inputs.agenix-rekey.nixosModules.default
         # inputs.agenix.nixosModules.default
-        inputs.chaotic.nixosModules.default
         inputs.ff.nixosModules.freedpomFlake
         inputs.ff.nixosModules.home-manager
         inputs.ff.nixosModules.preservation
