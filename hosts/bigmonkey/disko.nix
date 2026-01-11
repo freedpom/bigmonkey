@@ -74,15 +74,19 @@ in
 
     bcachefs_filesystems = {
       rootfs = {
-        mountpoint = "/nix";
         type = "bcachefs_filesystem";
         extraFormatArgs = [
           "--compression=zstd:1"
+          "--background_compression=zstd:3"
         ];
+        subvolumes = {
+          nix.mountpoint = "/nix";
+          root.mountpoint = "/nix/persist";
+          home.mountpoint = "/nix/persist/home";
+        };
       };
 
       fastpool = {
-        mountpoint = "/nix/persist/fpool";
         type = "bcachefs_filesystem";
         extraFormatArgs = [
           "--compression=zstd:1"
@@ -90,16 +94,21 @@ in
           "--data_replicas=1"
           "--metadata_replicas=2"
         ];
+        subvolumes = {
+          fpool.mountpoint = "/nix/persist/fpool";
+        };
       };
 
       bulkpool = {
-        mountpoint = "/nix/persist/bpool";
         type = "bcachefs_filesystem";
         extraFormatArgs = [
           "--compression zstd:5"
           "--background_compression=zstd:10"
           "--replicas=2"
         ];
+        subvolumes = {
+          bpool.mountpoint = "/nix/persist/bpool";
+        };
       };
     };
 
@@ -107,7 +116,7 @@ in
       fsType = "tmpfs";
       mountOptions = [
         "defaults"
-        "size=6G"
+        "size=3G"
         "mode=755"
       ];
     };
