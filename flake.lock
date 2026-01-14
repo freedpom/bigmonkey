@@ -184,11 +184,11 @@
         "wm-niri": "wm-niri"
       },
       "locked": {
-        "lastModified": 1767910291,
-        "narHash": "sha256-oMpRGOtnOaZXL1rZlU0YzZV5HHbGZbbUku38knehoPc=",
+        "lastModified": 1768235392,
+        "narHash": "sha256-y/qHVJ2huA0eCdZfodFsr5Y686vyitNNdx8NedEWR9g=",
         "owner": "freedpom",
         "repo": "FreedpomFlake",
-        "rev": "1835d80bf9402ba51a6bfaf884b3f53e20e8c1d3",
+        "rev": "08809f2eee71c0fdeb30c406e48eaa171cb73658",
         "type": "github"
       },
       "original": {

@@ -38,7 +38,10 @@
 
   security.pam = {
     sshAgentAuth.enable = true;
-    rssh.enable = true;
+    rssh = {
+      enable = true;
+      settings.cue = true;
+    };
   };
 
   services.openssh = {
