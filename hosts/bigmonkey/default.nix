@@ -18,7 +18,7 @@
           userOptions = {
             hashedPassword = "$6$i8pqqPIplhh3zxt1$bUH178Go8y5y6HeWKIlyjMUklE2x/8Vy9d3KiCD1WN61EtHlrpWrGJxphqu7kB6AERg6sphGLonDeJvS/WC730";
             openssh.authorizedKeys.keys = [
-              "sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAIPygL4EEH3CZXCAGndJzoq+bjKhqrVrUC+WxDKFTYTr0AAAADnNzaDpjb2RtYW4tbHBn codman@lpg"
+              "sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAIC9TFuSmRj41sApsoHJK8WAMsjVuYuBxWZQpTh378jF8AAAABHNzaDo= codman@lpg"
               "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICOODnpB7W2eG+cQlbDMO4TZ5F8mLBADpVTidn7b2MrO codman@spg"
             ];
           };
