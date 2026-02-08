@@ -1,7 +1,6 @@
 { ... }:
 {
-  ff = {
-    common.enable = true;
+  freedpom = {
     system = {
       nix.enable = true;
       boot.enable = true;
@@ -9,27 +8,26 @@
         enable = true;
         preserveHome = true;
       };
-    };
-
-    userConfig = {
       users = {
-        codman = {
-          role = "admin";
-          userOptions = {
-            hashedPassword = "$6$i8pqqPIplhh3zxt1$bUH178Go8y5y6HeWKIlyjMUklE2x/8Vy9d3KiCD1WN61EtHlrpWrGJxphqu7kB6AERg6sphGLonDeJvS/WC730";
-            openssh.authorizedKeys.keys = [
-              "sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAIC9TFuSmRj41sApsoHJK8WAMsjVuYuBxWZQpTh378jF8AAAABHNzaDo= codman@lpg"
-              "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICOODnpB7W2eG+cQlbDMO4TZ5F8mLBADpVTidn7b2MrO codman@spg"
-            ];
+        users = {
+          codman = {
+            role = "admin";
+            userOptions = {
+              hashedPassword = "$6$i8pqqPIplhh3zxt1$bUH178Go8y5y6HeWKIlyjMUklE2x/8Vy9d3KiCD1WN61EtHlrpWrGJxphqu7kB6AERg6sphGLonDeJvS/WC730";
+              openssh.authorizedKeys.keys = [
+                "sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAIC9TFuSmRj41sApsoHJK8WAMsjVuYuBxWZQpTh378jF8AAAABHNzaDo= codman@lpg"
+                "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICOODnpB7W2eG+cQlbDMO4TZ5F8mLBADpVTidn7b2MrO codman@spg"
+              ];
+            };
           };
-        };
-        quinno = {
-          role = "admin";
-          userOptions = {
-            hashedPassword = "$6$i8pqqPIplhh3zxt1$bUH178Go8y5y6HeWKIlyjMUklE2x/8Vy9d3KiCD1WN61EtHlrpWrGJxphqu7kB6AERg6sphGLonDeJvS/WC730";
-            openssh.authorizedKeys.keys = [
-              "sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAICU1ToHVRo5curH9yPzJPhRsf2FkqKMtroVtojTJ6IOZAAAACnNzaDpzaGluanU= slaw_dormitory861@aleeas.com"
-            ];
+          quinno = {
+            role = "admin";
+            userOptions = {
+              hashedPassword = "$6$i8pqqPIplhh3zxt1$bUH178Go8y5y6HeWKIlyjMUklE2x/8Vy9d3KiCD1WN61EtHlrpWrGJxphqu7kB6AERg6sphGLonDeJvS/WC730";
+              openssh.authorizedKeys.keys = [
+                "sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAICU1ToHVRo5curH9yPzJPhRsf2FkqKMtroVtojTJ6IOZAAAACnNzaDpzaGluanU= slaw_dormitory861@aleeas.com"
+              ];
+            };
           };
         };
       };
@@ -37,7 +35,6 @@
   };
 
   security.pam = {
-    sshAgentAuth.enable = true;
     rssh = {
       enable = true;
       settings.cue = true;
